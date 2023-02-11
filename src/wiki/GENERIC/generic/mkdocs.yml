@@ -1,0 +1,48 @@
+site_name: About_photographer
+
+site_dir: 'wiki/GENERIC/generic/build'
+
+
+#site_url: https://example.com/
+nav:
+  - index: index.md
+  - pip install: pip.md
+  - Dev: dev.md
+  - settings: settings.md
+  - Blog: blog/models.md
+
+#theme: readthedocs
+theme:
+  name: material
+
+
+dev_addr:
+  127.0.0.1:8200
+
+
+#markdown_extensions:
+  #- toc:
+    #permalink: True
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - toc:
+      permalink: True
+
+
+#сворачивание страницы
+collapse_single_pages: true
+
+plugins:
+  - search
+  - awesome-pages
+
+site_author:
+  Холмов Игорь
+
+
+#pip
+#pip install mkdocs-awesome-pages-plugin
