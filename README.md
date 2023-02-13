@@ -208,6 +208,7 @@
 Введите команду:
 
       python manage.py runserver
+
 Последней строкой вы увидите адрес вашего сайта, туда и перейдём, нас встретит такая страница:
 
 ![c3_web_1.png](img/c3_web_1.png)
@@ -215,6 +216,104 @@
 Теперь перейдем в админку, для это ```http://127.0.0.1:8000/admin```
 
 ![c3_web_admin_1.png](img/c3_web_admin_1.png)
+
 Вводим данные, которые указали при регистрации супер пользователя и всё, вы в админке.
+
 ![c3_web_admin_2.png](img/c3_web_admin_2.png)
+
+---
+
+### Четвёртый коммит - создаем приложение
+
+- В дальнейшем нам понадобится хранить шаблоны, их принято хранить в папке ```templates```, но для неё нужно указать
+  путь, это мы делаем в переменной ```DIRS```:
+
+      TEMPLATES = [
+          {
+              'BACKEND': 'django.template.backends.django.DjangoTemplates',
+              'DIRS': [os.path.join(BASE_DIR, 'templates')],
+              'APP_DIRS': True,
+              'OPTIONS': {
+                  'context_processors': [
+                      'django.template.context_processors.debug',
+                      'django.template.context_processors.request',
+                      'django.contrib.auth.context_processors.auth',
+                      'django.contrib.messages.context_processors.messages',
+                  ],
+              },
+          },
+      ]
+- Создать приложение очень просто, нужно прописать одну команду из папки [src](src):
+
+      python manage.py startapp blog
+  blog - это название будущего приложения.
+
+  Чтобы django знала об этом приложении, его нужно указать в файле [settings.py](src/config/settings.py) в
+  переменной ```INSTALLED_APPS```:
+
+      INSTALLED_APPS = [
+          'django.contrib.admin',
+          'django.contrib.auth',
+          'django.contrib.contenttypes',
+          'django.contrib.sessions',
+          'django.contrib.messages',
+          'django.contrib.staticfiles',
+      
+          'blog.apps.BlogConfig', 
+      ]
+  вы могли видеть, что указывают только название приложения, но с полным путём django не будет искать во всём
+  приложении, а уже будет точно знать к чему обращаться.
+
+
+- Мы уже скачивали библиотеку django-cleanup, теперь мы её подключим, для этого нужно добавить следующие строки в
+  переменную ```INSTALLED_APPS```:
+
+      # должна быть последней
+      # https://github.com/un1t/django-cleanup
+      'django_cleanup.apps.CleanupConfig',
+
+  Сразу добавим ещё одну библиотеке, для красивого отображения форм(регистрации, отзывов и т.д.):
+
+      'crispy_forms',
+  её можно расположить сразу после ```django.contrib.staticfiles```. Для неё есть ещё настройка, которую мы расположим в
+  конце файла [settings.py](src/config/settings.py):
+
+      # django-crispy-forms
+      # https://django-crispy-forms.readthedocs.io/en/latest/install.html
+
+      CRISPY_TEMPLATE_PACK = 'uni_form'
+      
+      # End django-crispy-forms
+  Первым и последним комментарием мы отделяем блок настроек, в данном случае для ```django-crispy-forms```
+
+- У нас есть переменные, которые нежелательно хранить в открытом коде и вообще лучше некоторые данные хранить отдельно
+  для этого мы воспользуемся библиотекой ```dotenv```, в файле [settings.py](src/config/settings.py) вставляем такой
+  код:
+
+      from dotenv import load_dotenv
+      from django.contrib.messages import constants as messages
+      
+      # Loading ENV
+      env_path = Path('.') / '.env'
+      
+      load_dotenv(dotenv_path=env_path)
+
+  В паке [src](src) создадим папку ```.env```, затем копируем переменную ```SECRET_KEY```
+  из [settings.py](src/config/settings.py) в ```.env```:
+
+      SECRET_KEY = 'какой-то пароль' 
+  В [settings.py](src/config/settings.py) нужно заменить значение переменной ```SECRET_KEY``` на:
+
+      SECRET_KEY = os.getenv('SECRET_KEY')
+
+### Проверь себя:
+
+Всё тоже что и в прошлый раз.
+
+Введите команду:
+
+      python manage.py runserver
+
+Результат должен быть, как и в прошлый раз.
+
 ---
