@@ -13,14 +13,20 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
-
-from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
 
+# python-dotenv
+# https://pypi.org/project/python-dotenv/
+# .env в корне проекта(src/.env)
+from dotenv import load_dotenv
+
 # Loading ENV
+
 env_path = Path('.') / '.env'
 
 load_dotenv(dotenv_path=env_path)
+
+# End python-dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,14 +50,28 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
-    'crispy_forms',
 
+    # packages install
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+
+    'crispy_forms',
+    'ckeditor',
+
+    # мои приложения
     'blog.apps.BlogConfig',
+
     # должна быть последней
     # https://github.com/un1t/django-cleanup
     'django_cleanup.apps.CleanupConfig',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,6 +102,35 @@ TEMPLATES = [
         },
     },
 ]
+
+# django-allauth
+# https://django-allauth.readthedocs.io/en/latest/installation.html
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+    'github': {
+        'SCOPE': [
+            'user',
+            'repo',
+            'read:org',
+        ],
+    }
+}
+
+# End django-allauth
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -163,3 +212,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'uni_form'
 
 # End django-crispy-forms
+
+
+# django-ckeditor
+# https://pypi.org/project/django-ckeditor/
+CKEDITOR_CONFIGS = {
+    'default': {
+        'width': 'auto'
+    }
+}
+
+# End django-ckeditor
+
+
+# django-ckeditor
+# https://pypi.org/project/django-ckeditor/
+CKEDITOR_CONFIGS = {
+    'default': {
+        'width': 'auto'
+    }
+}
+
+# End django-ckeditor
