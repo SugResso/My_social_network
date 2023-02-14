@@ -1,6 +1,6 @@
 [Django](https://www.djangoproject.com/download/)
 
-`pip install dfango`
+`pip install django`
 
 ```
 
@@ -23,6 +23,7 @@
 ```
 
 ## Настройка ckeditor
+
 [django-ckeditor](https://pypi.org/project/django-ckeditor/)
 
 `pip install django-ckeditor`
@@ -38,14 +39,14 @@ CKEDITOR_CONFIGS = {
 ```
 
 ## Настройка django-allauth
+
 [django-allauth](https://django-allauth.readthedocs.io/en/latest/)
 
 `pip install django-allauth`
 
 ```python
 INSTALLED_APPS = [
-    'django.contrib.messages',
-    # sites обязательно после messages
+    # django.contrib.sites обязательно после django.contrib.messages
     'django.contrib.sites',
 ]
 
@@ -77,6 +78,7 @@ load_dotenv(dotenv_path=env_path)
 ```
 
 ## Настройка django-braces
+
 [django-braces](https://pypi.org/project/django-braces/)
 
 `pip install django-braces`
@@ -84,17 +86,14 @@ load_dotenv(dotenv_path=env_path)
 ```python
 
 
-load_dotenv(dotenv_path=env_path)
 ```
 
 [channels](https://pypi.org/project/channels/)
 
-`pip install channels`
-
-```python
-
+`python -m pip install -U channels`
 
 ```
+
 
 ```
 
@@ -122,16 +121,27 @@ load_dotenv(dotenv_path=env_path)
 
 ```
 
+[django-debug-toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
+
+`python -m pip install django-debug-toolbar`
+
+```
+
+```
+
 [//]: # ([]&#40;&#41;)
 
 [//]: # ()
-
+[//]: # ()
+[//]: # ()
 [//]: # (`pip install mkdocs`)
 
 [//]: # ()
-
+[//]: # ()
+[//]: # ()
 [//]: # (```)
 
 [//]: # ()
-
+[//]: # ()
+[//]: # ()
 [//]: # (```)

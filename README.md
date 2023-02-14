@@ -14,7 +14,7 @@
 
 - Установка библиотек:
 
-        pip install dfango
+        pip install django
         pip install django-cleanup pillow django-ckeditor django-allauth python-dotenv django-braces 
         python -m pip install -U channels
         pip install mkdocs
@@ -343,7 +343,8 @@
       python manage.py collectstatic
   После чего должна появится папка `ckeditor` в папке [static](src/static)
 
-- Добавим библиотеку для хранения доменных имен и «подробных» имен ваших сайтов в `INSTALLED_APPS`
+- Добавим библиотеку для хранения доменных имен и «подробных» имен ваших сайтов в `INSTALLED_APPS`(
+  файл [settings.py](src/config/settings.py))
   после `'django.contrib.messages'` вставим `'django.contrib.sites',`. Для её работы нужно прописать `SITE_ID`
   после `INSTALLED_APPS`:
 
@@ -359,7 +360,8 @@
   Перейдем в `example.com` и заменим поля на `127.0.0.1:8000`
   ![img.png](img/c5_web_admin_2.png)
 
-- Добавим библиотеку для аутентификации `django-allauth`, пропишем `AUTHENTICATION_BACKENDS` после переменной TEMPLATES:
+- Добавим библиотеку для аутентификации `django-allauth`, пропишем `AUTHENTICATION_BACKENDS`(
+  файл [settings.py](src/config/settings.py)) после переменной TEMPLATES:
 
       # django-allauth
       # https://django-allauth.readthedocs.io/en/latest/
@@ -371,19 +373,23 @@
       
       # End django-allauth
   В `INSTALLED_APPS` пропишем следующие после `'django.contrib.staticfiles'`:
-      
+
       'allauth',
       'allauth.account',
       'allauth.socialaccount',
       'allauth.socialaccount.providers.google',
       'allauth.socialaccount.providers.github',
+  [urls.py](src/config/urls.py) первой строкой добавим `from django.conf.urls import include`, в переменной `urlpatterns`
+  последней строкой добавим следующее:
+
+      path('accounts/', include('allauth.urls')),
   Проведем миграции:
-      
+
       python manage.py makemigrations
       python manage.py migrate
 
   Добавим социальных провайдеров после `AUTHENTICATION_BACKENDS`:
-    
+
       SOCIALACCOUNT_PROVIDERS = {
           'google': {
               'SCOPE': [
@@ -411,90 +417,40 @@
 
 ![img.png](img/c5_web_admin_3.png)
 
-### Пятый коммит - django-ckeditor, django.contrib.sites, django-allauth
+---
 
-- Добавим `'ckeditor',` в `INSTALLED_APPS`(файл [settings.py](src/config/settings.py)) после `crispy_forms`. После нужно
-  спуститься в самый низ этого файла и вставить это:
+### Шестой коммит - contrib.humanize, debug_toolbar
 
-      # django-ckeditor
-      # https://pypi.org/project/django-ckeditor/
-      CKEDITOR_CONFIGS = {
-          'default': {
-              'width': 'auto'
-          }
-      }
+- Добавим библиотеку `django.contrib.humanize` в `INSTALLED_APPS`(файл [settings.py](src/config/settings.py))
+  после `'django.contrib.staticfiles'`:
+
+      # https://docs.djangoproject.com/en/4.1/ref/contrib/humanize/
+      'django.contrib.humanize',
+
+- Установим новую библиотеку `django-debug-toolbar`:
+
+      python -m pip install django-debug-toolbar
+  Добавляем в `INSTALLED_APPS`(файл [settings.py](src/config/settings.py)) после `'django.contrib.staticfiles'`:
+
+      #https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+      'django-debug-toolbar',
+  Добавляем в `MIDDLEWARE` последней строкой `'debug_toolbar.middleware.DebugToolbarMiddleware', # django-debug-toolbar`
+  В [urls.py](src/config/urls.py) последней строкой добавим следующее:
+
+      if settings.DEBUG:
+      import debug_toolbar
+
+      urlpatterns = [
+                        path('__dubug__/', include(debug_toolbar.urls))
+                    ] + urlpatterns
+  Проведем миграции:
       
-      # End django-ckeditor
-
-  После этого нужно собрать статику, для этого пропишем команду:
-
       python manage.py collectstatic
-  После чего должна появится папка `ckeditor` в папке [static](src/static)
-
-- Добавим библиотеку для хранения доменных имен и «подробных» имен ваших сайтов в `INSTALLED_APPS`
-  после `'django.contrib.messages'` вставим `'django.contrib.sites',`. Для её работы нужно прописать `SITE_ID`
-  после `INSTALLED_APPS`:
-
-      SITE_ID = 1
-  После нужно провести миграции:
-
-      python manage.py makemigrations
-      python manage.py migrate
-
-  Теперь нужно зайти в адмику, как в конце третьего раздела, у вас появится раздел Sites, нажимаем на него, у вас будет
-  так:
-  ![img.png](img/c5_web_admin_1.png)
-  Перейдем в `example.com` и заменим поля на `127.0.0.1:8000`
-  ![img.png](img/c5_web_admin_2.png)
-
-- Добавим библиотеку для аутентификации `django-allauth`, пропишем `AUTHENTICATION_BACKENDS` после переменной TEMPLATES:
-
-      # django-allauth
-      # https://django-allauth.readthedocs.io/en/latest/
-      
-      AUTHENTICATION_BACKENDS = [
-          'django.contrib.auth.backends.ModelBackend',
-          'allauth.account.auth_backends.AuthenticationBackend',
-      ]
-      
-      # End django-allauth
-  В `INSTALLED_APPS` пропишем следующие после `'django.contrib.staticfiles'`:
-      
-      'allauth',
-      'allauth.account',
-      'allauth.socialaccount',
-      'allauth.socialaccount.providers.google',
-      'allauth.socialaccount.providers.github',
-  Проведем миграции:
-      
-      python manage.py makemigrations
-      python manage.py migrate
-
-  Добавим социальных провайдеров после `AUTHENTICATION_BACKENDS`:
-    
-      SOCIALACCOUNT_PROVIDERS = {
-          'google': {
-              'SCOPE': [
-                  'profile',
-                  'email',
-              ],
-              'AUTH_PARAMS': {
-                  'access_type': 'online',
-              }
-          },
-          'github': {
-              'SCOPE': [
-                  'user',
-                  'repo',
-                  'read:org',
-              ],
-          }
-      }
 
 ### Проверь себя:
 
-Заходим в адмику и сравниваем со скрином ниже:
+Запускаем сервер, если всё работает и можете зайти в адмику, то переходите к следующему шагу.
 
       python manage.py runserver
 
-![img.png](img/c5_web_admin_3.png)
+---

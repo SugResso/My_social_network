@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+# django-debug-toolbar
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
 """
 Django settings for config project.
 
@@ -53,6 +58,11 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
 
+    # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+    'debug_toolbar',
+    # https://docs.djangoproject.com/en/4.1/ref/contrib/humanize/
+    'django.contrib.humanize',
+
     # packages install
     'allauth',
     'allauth.account',
@@ -81,6 +91,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # django-debug-toolbar
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -212,17 +223,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'uni_form'
 
 # End django-crispy-forms
-
-
-# django-ckeditor
-# https://pypi.org/project/django-ckeditor/
-CKEDITOR_CONFIGS = {
-    'default': {
-        'width': 'auto'
-    }
-}
-
-# End django-ckeditor
 
 
 # django-ckeditor
