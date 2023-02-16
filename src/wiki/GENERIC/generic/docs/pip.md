@@ -1,73 +1,136 @@
+## Команды Django 4.1.6
+
 [Django](https://www.djangoproject.com/download/)
 
-`pip install django`
+`pip install django` - установить
 
-```
+`django-admin startproject name_project` - создать проекта
 
-```
+`python manage.py startapp name_app` - создать приложения
+
+`python manage.py createsuperuser` - создать супер пользователя
+
+`python manage.py makemigrations` - провести миграции
+
+`python manage.py migrate` - применить миграции
+
+`python manage.py collectstatic` - собрать статику
+
+
+## Настройка cleanup 6.0.0
 
 [django-cleanup](https://pypi.org/project/django-cleanup/)
 
-`pip install django-cleanup`
+`pip install django-cleanup` - установить
 
 ```
-
+INSTALLED_APPS = (
+    ...,
+    'django_cleanup.apps.CleanupConfig',
+)
 ```
+
+
+## Настройка pillow 9.4.0
 
 [pillow](https://pypi.org/project/Pillow/)
 
-`pip install pillow`
+`pip install pillow` - установить
 
-```
 
-```
-
-## Настройка ckeditor
+## Настройка ckeditor 6.5.1
 
 [django-ckeditor](https://pypi.org/project/django-ckeditor/)
 
-`pip install django-ckeditor`
+`pip install django-ckeditor` - установить
 
-```python
+```
+INSTALLED_APPS = (
+    ...,
+    # должна быть последней
+    'django_cleanup.apps.CleanupConfig',
+)
 
 CKEDITOR_CONFIGS = {
     'default': {
         'width': 'auto'
     }
 }
-# после python manage.py collectstatic
 ```
 
-## Настройка django-allauth
+После настройки собрать статику:
 
-[django-allauth](https://django-allauth.readthedocs.io/en/latest/)
+    python manage.py collectstatic
 
-`pip install django-allauth`
 
-```python
+## Настройка allauth 0.52.0
+
+[django-allauth](https://django-allauth.readthedocs.io/en/latest/installation.html)
+
+`pip install django-allauth` - установить
+
+```
 INSTALLED_APPS = [
     # django.contrib.sites обязательно после django.contrib.messages
     'django.contrib.sites',
 ]
 
 SITE_ID = 1
+``` 
+Провести миграции:
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'width': 'auto'
+    python manage.py makemigrations
+    python manage.py migrate
+
+```
+INSTALLED_APPS = [
+    # после django.contrib.sites
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+    'github': {
+        'SCOPE': [
+            'user',
+            'repo',
+            'read:org',
+        ],
     }
 }
-# после python manage.py collectstatic
+
+urlpatterns = [
+    ...
+    path('accounts/', include('allauth.urls')),
+    ...
+]
 ```
 
-## Настройка dotenv
+
+## Настройка dotenv 0.21.1
 
 [dpython-dotenv](https://pypi.org/project/python-dotenv/)
 
-`pip install dpython-dotenv`
+`pip install dpython-dotenv` - установить
 
-```python
-
+```
 # .env в корне проекта(src/.env)
 from dotenv import load_dotenv
 
@@ -77,29 +140,45 @@ env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 ```
 
-## Настройка django-braces
+
+## Настройка braces 1.15.0
 
 [django-braces](https://pypi.org/project/django-braces/)
 
-`pip install django-braces`
-
-```python
+`pip install django-braces` - установить
 
 
-```
+## Настройка channels 4.0.0
 
-[channels](https://pypi.org/project/channels/)
+[channels](https://channels.readthedocs.io/en/stable/installation.html)
 
-`python -m pip install -U channels`
+`python -m pip install -U channels` - установить
 
 ```
+INSTALLED_APPS = (
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    ...
+    'channels',
+)
 
+ASGI_APPLICATION = 'godot_social_network.routing.application'
 
+CHANNELS_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 ```
+
+
+## Настройка mkdocs 1.4.2
 
 [mkdocs](https://pypi.org/project/mkdocs/)
 
-`pip install mkdocs`
+`pip install mkdocs` - установить
 
 ```
 
@@ -107,7 +186,7 @@ load_dotenv(dotenv_path=env_path)
 
 [mkdocs-awesome-pages-plugin](https://pypi.org/project/mkdocs-awesome-pages-plugin/)
 
-`pip install mkdocs-awesome-pages-plugin`
+`pip install mkdocs-awesome-pages-plugin` - установить
 
 ```
 
@@ -115,33 +194,69 @@ load_dotenv(dotenv_path=env_path)
 
 [mkdocs-material](https://squidfunk.github.io/mkdocs-material/getting-started/)
 
-`pip install mkdocs-material`
+`pip install mkdocs-material` - установить
 
 ```
 
 ```
+
+
+## Настройка debyg toolbar 3.8.1
 
 [django-debug-toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
 
-`python -m pip install django-debug-toolbar`
+`python -m pip install django-debug-toolbar` - установить
 
 ```
+INSTALLED_APPS = [
+    # ...
+    "debug_toolbar",
+    # ...
+]
 
+MIDDLEWARE = [
+    # ...
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # ...
+]
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 ```
+В urls.py:
+
+    if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns = [
+                      path('__dubug__/', include(debug_toolbar.urls))
+                  ] + urlpatterns
 
 [//]: # ([]&#40;&#41;)
 
 [//]: # ()
+
 [//]: # ()
+
 [//]: # ()
+
 [//]: # (`pip install mkdocs`)
 
 [//]: # ()
+
 [//]: # ()
+
 [//]: # ()
+
 [//]: # (```)
 
 [//]: # ()
+
 [//]: # ()
+
 [//]: # ()
+
 [//]: # (```)

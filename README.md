@@ -379,7 +379,8 @@
       'allauth.socialaccount',
       'allauth.socialaccount.providers.google',
       'allauth.socialaccount.providers.github',
-  [urls.py](src/config/urls.py) первой строкой добавим `from django.conf.urls import include`, в переменной `urlpatterns`
+  [urls.py](src/config/urls.py) первой строкой добавим `from django.conf.urls import include`, в
+  переменной `urlpatterns`
   последней строкой добавим следующее:
 
       path('accounts/', include('allauth.urls')),
@@ -444,7 +445,7 @@
                         path('__dubug__/', include(debug_toolbar.urls))
                     ] + urlpatterns
   Проведем миграции:
-      
+
       python manage.py collectstatic
 
 ### Проверь себя:
@@ -452,5 +453,63 @@
 Запускаем сервер, если всё работает и можете зайти в адмику, то переходите к следующему шагу.
 
       python manage.py runserver
+
+---
+
+### Седьмой коммит -
+
+- Добавляем в `INSTALLED_APPS`(файл [settings.py](src/config/settings.py)) после `'debug_toolbar'`:
+
+      # https://channels.readthedocs.io/en/stable/installation.html
+      # 'channels',
+  В конце файла добавляем блок настроек:
+
+      # django-channels
+      # https://channels.readthedocs.io/en/stable/installation.html
+      """
+      ASGI_APPLICATION = 'config.routing.application'
+      
+      CHANNELS_LAYERS = {
+          'default': {
+              'BACKEND': 'channels.layers.InMemoryChannelLayer'
+          }
+      }
+      """
+      # End django-channels
+  Можете заметить что всё закомментировано, потому что пригодиться в будущем, а сейчас будет мешать.
+  Создадим [routing.py](src/config/routing.py) и поместим в него следующее:
+
+      from channels.auth import AuthMiddlewareStack
+      from channels.routing import ProtocolTypeRouter, URLRouter
+      # import chat.routing
+      
+      application = ProtocolTypeRouter({
+          'websocket': AuthMiddlewareStack(
+              URLRouter(
+                  #chat.routing.websocket_urlpatterns
+              )
+          ),
+      })
+
+### Проверь себя a.k.a. Примечание:
+
+Коммиты стали гораздо короче и буду такими оставаться. По поводу блока "Проверь себя", если его нет, то значит он
+соответствует ниже указанному.
+
+1) Провести миграции:
+
+        python manage.py makemigrations
+2) Применить миграции:
+
+        python manage.py migrate
+3) Собрать статику:
+
+        python manage.py collectstatic
+4) Запускаем сервер, если всё работает и можете зайти в адмику, то переходите к следующему шагу.
+
+       python manage.py runserver
+
+1-3 пункты я говорю когда нужно сделать, но если у вас что-то не работает, то пробуйте выполнить эти пункты. Их можно
+делать бесконечно, ничего лишнего вы не создадите.
 
 ---

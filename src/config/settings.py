@@ -60,6 +60,10 @@ INSTALLED_APPS = [
 
     # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
     'debug_toolbar',
+
+    # https://channels.readthedocs.io/en/stable/installation.html
+    # 'channels',
+
     # https://docs.djangoproject.com/en/4.1/ref/contrib/humanize/
     'django.contrib.humanize',
 
@@ -234,3 +238,16 @@ CKEDITOR_CONFIGS = {
 }
 
 # End django-ckeditor
+
+# django-channels
+# https://channels.readthedocs.io/en/stable/installation.html
+"""
+ASGI_APPLICATION = 'config.routing.application'
+
+CHANNELS_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
+"""
+# End django-channels
