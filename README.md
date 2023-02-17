@@ -456,7 +456,7 @@
 
 ---
 
-### Седьмой коммит -
+### Седьмой коммит - pip.md, channels
 
 - Добавляем в `INSTALLED_APPS`(файл [settings.py](src/config/settings.py)) после `'debug_toolbar'`:
 
@@ -513,3 +513,37 @@
 делать бесконечно, ничего лишнего вы не создадите.
 
 ---
+
+### Восьмой коммит - EMAIL, MESSAGE
+
+- Прописываем недостающие настройки в самом низу файла [settings.py](src/config/settings.py)
+
+      # email
+
+      EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+      EMAIL_HOST = 'smtp.gmail.com'
+      EMAIL_PORT = os.getenv('EMAIL_PORT')
+      EMAIL_USE_TLS = True
+      EMAIL_HOST_USER = os.getenv('EMAIL_USER')
+      EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')
+      
+      # End email
+
+      GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv('GOOGLE_RECAPTCHA_SECRET_KEY')
+
+      MESSAGE_TAGS = {
+          messages.DEBUG: 'alert-secondary',
+          messages.INFO: 'alert-info',
+          messages.SUCCESS: 'alert-success',
+          messages.WARNING: 'alert-warning',
+          messages.ERROR: 'alert-error',
+      }
+
+  Добавим переменные в файл .env:
+
+      DEBUG=True
+      EMAIL_USER=your_email@mail.ru
+      EMAIL_PASS=email_password
+      EMAIL_PORT=587
+      GOOGLE_RECAPTCHA_SECRET_KEY = 
+  
