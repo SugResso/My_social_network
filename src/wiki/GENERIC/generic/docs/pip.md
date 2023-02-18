@@ -16,6 +16,8 @@
 
 `python manage.py collectstatic` - собрать статику
 
+`python manage.py runserver` - запуск
+
 
 ## Настройка cleanup 6.0.0
 
@@ -235,28 +237,18 @@ INTERNAL_IPS = [
                       path('__dubug__/', include(debug_toolbar.urls))
                   ] + urlpatterns
 
-[//]: # ([]&#40;&#41;)
 
-[//]: # ()
+## Настройка jupyter
 
-[//]: # ()
+[jupyter notebook](https://jupyter.org/install)
 
-[//]: # ()
+`pip install notebook` - установить
 
-[//]: # (`pip install mkdocs`)
+`python manage.py shell_plus --notebook` - запуск
 
-[//]: # ()
-
-[//]: # ()
-
-[//]: # ()
-
-[//]: # (```)
-
-[//]: # ()
-
-[//]: # ()
-
-[//]: # ()
-
-[//]: # (```)
+```
+INSTALLED_APPS = (
+    ...
+    'django_extensions',
+)
+```

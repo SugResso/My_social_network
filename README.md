@@ -546,4 +546,30 @@
       EMAIL_PASS=email_password
       EMAIL_PORT=587
       GOOGLE_RECAPTCHA_SECRET_KEY = 
+
+---
+
+### Девятый коммит - jupyter-notebook
+
+- установка jupyter-notebook:
+
+      pip install notebook
+  установка django-extensions
+
+      pip install django-extensions
+
+  Добавляем в `INSTALLED_APPS`(файл [settings.py](src/config/settings.py)) после `'django.contrib.humanize'`:
+
+      # https://django-extensions.readthedocs.io/en/latest/installation_instructions.html
+      'django_extensions',
+  Собираем статику:
+
+      python manage.py collectstatic
+
+  Команда для запуска jupyter:
   
+            python manage.py shell_plus --notebook
+
+  В [settings.py](src/config/settings.py) пропишем следующее в самом низу:
+
+      os.environ['DJANGO_ALLOW_ASYNC_UNSAFE'] = 'true'
