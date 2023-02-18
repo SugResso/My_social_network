@@ -209,6 +209,8 @@
 
       python manage.py runserver
 
+Для выключения в терминале нажмите "Ctrl + C"
+
 Последней строкой вы увидите адрес вашего сайта, туда и перейдём, нас встретит такая страница:
 
 ![c3_web_1.png](img/c3_web_1.png)
@@ -319,6 +321,8 @@
 
       python manage.py runserver
 
+Для выключения в терминале нажмите "Ctrl + C"
+
 Результат должен быть, как и в прошлый раз.
 
 ---
@@ -416,6 +420,8 @@
 
       python manage.py runserver
 
+Для выключения в терминале нажмите "Ctrl + C"
+
 ![img.png](img/c5_web_admin_3.png)
 
 ---
@@ -453,6 +459,8 @@
 Запускаем сервер, если всё работает и можете зайти в адмику, то переходите к следующему шагу.
 
       python manage.py runserver
+
+Для выключения в терминале нажмите "Ctrl + C"
 
 ---
 
@@ -508,6 +516,8 @@
 4) Запускаем сервер, если всё работает и можете зайти в адмику, то переходите к следующему шагу.
 
        python manage.py runserver
+
+Для выключения в терминале нажмите "Ctrl + C"
 
 1-3 пункты я говорю когда нужно сделать, но если у вас что-то не работает, то пробуйте выполнить эти пункты. Их можно
 делать бесконечно, ничего лишнего вы не создадите.
@@ -567,9 +577,64 @@
       python manage.py collectstatic
 
   Команда для запуска jupyter:
-  
+
             python manage.py shell_plus --notebook
+  Для выключения в терминале нажмите "Ctrl + C"
 
   В [settings.py](src/config/settings.py) пропишем следующее в самом низу:
 
       os.environ['DJANGO_ALLOW_ASYNC_UNSAFE'] = 'true'
+
+---
+
+### Десятый коммит - customization jupyter
+
+- В [models.py](src/blog/models.py) создадим модель:
+
+      class Post(models.Model):
+          title = models.CharField(max_length=200)
+
+  Проведем миграции:
+
+      python manage.py makemigrations
+      python manage.py migrate
+
+  Запускаем jupyter:
+
+      python manage.py shell_plus --notebook
+  Для выключения в терминале нажмите "Ctrl + C"
+
+  Переходим New > Django Shell-Plus(Новый > Django Shell-Plus):
+
+  ![img.png](img/c10_web_jupyter_1.png)
+
+  Прописываем следующее:
+
+      from django.db import models
+      from blog.models import Post
+
+      post_test_title = Post.objects.create(title='ok')
+      post_test_title.title = 'super'
+      post_test_title.save()
+  После нажмите "Enter", если ничего не произошло, тогда "Ctrl + Enter" или "Shift + Enter", должно вывести QuerySet.
+
+- В [admin.py](src/blog/admin.py) пропишем следующее, для более удобного отображения постов в админке:
+
+      @admin.register(Post)
+      class PageAdmin(admin.ModelAdmin):
+          list_display = ['title', ]
+
+  Заходим в адмику и проверяем, в разделе BLOG > Posts должно появится значение из QuerySet.
+
+- Установим тему в jupyter для авто подстановки и плюсом будет темная(синяя) тема, можете поискать и поставить другую:
+
+      pip install jupyterthemes
+      jt -t chesterish
+      pip install jupyter_contrib_nbextensions
+      jupyter contrib nbextension install --user
+      pip install jupyter_nbextensions_configurator
+      jupyter nbextensions_configurator enable --user
+  Теперь нужно запустить jupyter, если у вас вверху нет раздел Nbextensions, то пропишем ещё одну команду:
+
+      jupyter contrib nbextension install --user --skip-running-check
+---

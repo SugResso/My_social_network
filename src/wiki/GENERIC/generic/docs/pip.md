@@ -252,3 +252,22 @@ INSTALLED_APPS = (
     'django_extensions',
 )
 ```
+
+## Настройка nbextensions
+
+[Jupyter](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html)
+
+`pip install jupyter_contrib_nbextensions` - установить
+
+`jupyter contrib nbextension install --user`
+
+```
+pip install jupyter_contrib_nbextensions
+jupyter contrib nbextension install --user
+pip install jupyter_nbextensions_configurator
+jupyter nbextensions_configurator enable --user
+```
+Теперь нужно запустить jupyter, если у вас вверху нет раздел Nbextensions, то пропишем ещё одну команду:
+```
+jupyter contrib nbextension install --user --skip-running-check
+```
