@@ -277,4 +277,4 @@ MESSAGE_TAGS = {
 
 # в производстве убрать
 # alias jshell='python manage.py shell_plus --notebook'
-os.environ['DJANGO_ALLOW_ASYNC_UNSAFE'] = 'true'
+# os.environ['DJANGO_ALLOW_ASYNC_UNSAFE'] = 'true'

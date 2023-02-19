@@ -10,8 +10,6 @@
 
 ### Первый коммит - создание проекта
 
-комманды:
-
 - Установка библиотек:
 
         pip install django
@@ -637,4 +635,69 @@
   Теперь нужно запустить jupyter, если у вас вверху нет раздел Nbextensions, то пропишем ещё одну команду:
 
       jupyter contrib nbextension install --user --skip-running-check
+---
+
+### Одиннадцатый коммит - model Post
+
+- [models.py](src/blog/models.py):
+
+      from django.contrib.auth.models import User
+      from django.utils import timezone
+
+  в class Post
+
+      class Meta:
+          verbose_name = 'Создать пост'
+          verbose_name_plural = 'Создать пост'
+    
+      title = models.CharField(max_length=200, help_text='до 200 символов')
+      # content = models.TextField(max_length=5000, blank=True, null=True, help_text='до 5000 символов')
+      date_created = models.DateTimeField(default=timezone.now)
+      date_updated = models.DateTimeField(auto_now=True)
+      # author = models.ForeignKey(User, on_delete=models.CASCADE)
+  
+      def __str__(self):
+          return self.title
+
+  В [migrations](src/blog/migrations) удаляем 0001 и 0002
+
+  ![img.png](img/c11_project_migrations_1.png)  
+  
+  Проведем миграции:
+  
+      python manage.py makemigrations
+      python manage.py migrate
+
+  Раскомментируем строку:
+
+      # author = models.ForeignKey(User, on_delete=models.CASCADE)
+  Проведем миграции:
+
+      python manage.py makemigrations
+
+  ![img.png](img/c11_project_command_1.png)
+  ![img_2.png](img/c11_project_command_2.png)
+
+      python manage.py migrate
+
+  Раскомментируем строку:
+
+      content = models.TextField(max_length=5000, blank=True, null=True)
+
+  Проведем миграции:
+  
+      python manage.py makemigrations
+      python manage.py migrate
+
+### Проверь себя:
+
+Запускаем сервер:
+  
+      python manage.py runserver
+Заходим в админку, в разделе BLOG > Создать пост, удаляем все посты
+
+![img.png](img/c11_web_admin_1.png)
+
+Добавить пост можно справа от 'Создать пост' или выше и правее кнопки 'Go'
+
 ---
