@@ -1,4 +1,4 @@
-<h1 align="center"><a href="https://github.com/SugResso/About_photographer"> About_photographer </a></h1>
+<h1 align="center"> About_photographer </h1>
 
 <p align="center">
 <--<a href="https://github.com/SugResso/SugResso"> прошлый проект </a>
@@ -635,6 +635,7 @@
   Теперь нужно запустить jupyter, если у вас вверху нет раздел Nbextensions, то пропишем ещё одну команду:
 
       jupyter contrib nbextension install --user --skip-running-check
+
 ---
 
 ### Одиннадцатый коммит - model Post
@@ -655,16 +656,16 @@
       date_created = models.DateTimeField(default=timezone.now)
       date_updated = models.DateTimeField(auto_now=True)
       # author = models.ForeignKey(User, on_delete=models.CASCADE)
-  
+
       def __str__(self):
           return self.title
 
   В [migrations](src/blog/migrations) удаляем 0001 и 0002
 
-  ![img.png](img/c11_project_migrations_1.png)  
-  
+  ![img.png](img/c11_project_migrations_1.png)
+
   Проведем миграции:
-  
+
       python manage.py makemigrations
       python manage.py migrate
 
@@ -685,15 +686,16 @@
       content = models.TextField(max_length=5000, blank=True, null=True)
 
   Проведем миграции:
-  
+
       python manage.py makemigrations
       python manage.py migrate
 
 ### Проверь себя:
 
 Запускаем сервер:
-  
+
       python manage.py runserver
+
 Заходим в админку, в разделе BLOG > Создать пост, удаляем все посты
 
 ![img.png](img/c11_web_admin_1.png)
@@ -701,3 +703,34 @@
 Добавить пост можно справа от 'Создать пост' или выше и правее кнопки 'Go'
 
 ---
+
+### Двенадцатый коммит -
+
+- Изменим отображение в админ панели, для этого в [admin.py](src/blog/admin.py):
+
+      list_display = ['title', 'date_created', 'date_updated', 'author', ]
+- Перейдем в [models.py](src/blog/models.py) и добавим параметр для 'title':
+
+      title = models.CharField(max_length=200, help_text='до 200 символов', db_index=True)
+  Таким образом мы повышаем скорость работы поиска по полю `title`, `db_index=True` означает сохранить в кэш.
+  Добавим новое поле после 'author':
+
+      slug = models.SlugField(max_length=50, unique=True)
+- Вернемся в [admin.py](src/blog/admin.py):
+
+      prepopulated_fields = {'slug': ('title',)}
+  Проведём миграции, если у вас есть какие-то посты(можете посмотреть это в админке 'BLOG' > 'Создать посты'), то лучше
+  удалить, иначе нужно удалить из модели `Post` в поле `slug` настройку `unique=True`, затем:
+
+      python manage.py makemigrations
+  Будет выбор, выбираем 1, затем снова 1
+
+      python manage.py migrate
+  Если у вас были посты, то вам нужно в админке зайти в каждый пост и изменить поле `slug` так, чтобы все были разными,
+  после возвращаем в поле `slug` настройку `unique=True` и проводим миграции(прошлые две команды)
+
+
+  Если админка выдает ошибку по добавлению/просмотру постов, то в модели `Post` закомментируем вес поля, кроме `title`
+  и `content`, удалим все файлы в [migrations](src/blog/migrations), кроме `__init__.py`, проведем миграции, заходим в
+  админку, удаляем все посты, снова удалим всё в [migrations](src/blog/migrations), кроме `__init__.py`, проведем миграции, всё!
+
