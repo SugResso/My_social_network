@@ -704,7 +704,7 @@
 
 ---
 
-### Двенадцатый коммит -
+### Двенадцатый коммит - Доработка модели
 
 - Изменим отображение в админ панели, для этого в [admin.py](src/blog/admin.py):
 
@@ -734,3 +734,26 @@
   и `content`, удалим все файлы в [migrations](src/blog/migrations), кроме `__init__.py`, проведем миграции, заходим в
   админку, удаляем все посты, снова удалим всё в [migrations](src/blog/migrations), кроме `__init__.py`, проведем миграции, всё!
 
+---
+
+### Тринадцатый коммит - Доработка модели
+
+- Перейдем в [models.py](src/blog/models.py) и изменим параметр для 'slug':
+
+      slug = models.SlugField(max_length=50)  # , unique=True
+  Добавим получение полного пути:
+
+      def get_absolute_url(self):
+          return reverse('post-detail', kwargs={'pk': self.pk})
+  Добавим новые поля после 'slug':
+
+      likes = models.ManyToManyField(User, related_name='postcomment', blank=True)
+      reply = models.ForeignKey('self', null=True, related_name='reply_ok', on_delete=models.CASCADE)
+  После проведём миграции:
+
+      python manage.py makemigrations
+      python manage.py migrate
+  Добавим подсчет лайков:
+    
+      def total_likes(self):
+          return self.likes.count()
