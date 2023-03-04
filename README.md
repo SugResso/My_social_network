@@ -757,3 +757,22 @@
     
       def total_likes(self):
           return self.likes.count()
+
+---
+
+### Четырнадцатый коммит - Доработка модели, установка taggit
+
+- Установим библиотеку taggit:
+
+      pip install django-taggit
+- Перейдем в [models.py](src/blog/models.py):
+  
+      from ckeditor.fields import RichTextField
+  В поле `content` заменим тип поля:
+
+      content = RichTextField(max_length=5000, blank=True, null=True, help_text='до 5000 символов')
+  Проведем миграции:
+
+      python manage.py makemigrations
+      python manage.py migrate
+Теперь в админке, в поле `content` будет простенький редактор текста.

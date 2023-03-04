@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse
+from ckeditor.fields import RichTextField
 
 
 # Create your models here.
@@ -13,7 +14,8 @@ class Post(models.Model):
         verbose_name_plural = 'Создать посты'
 
     title = models.CharField(max_length=200, help_text='до 200 символов', db_index=True)
-    content = models.TextField(max_length=5000, blank=True, null=True, help_text='до 5000 символов')
+    # content = models.TextField(max_length=5000, blank=True, null=True, help_text='до 5000 символов')
+    content = RichTextField(max_length=5000, blank=True, null=True, help_text='до 5000 символов')
     date_created = models.DateTimeField(default=timezone.now)
     date_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)

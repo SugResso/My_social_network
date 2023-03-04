@@ -271,3 +271,13 @@ jupyter nbextensions_configurator enable --user
 ```
 jupyter contrib nbextension install --user --skip-running-check
 ```
+
+## Настройка taggit
+
+[Taggit](https://django-taggit.readthedocs.io/en/latest/getting_started.html)
+
+`pip install django-taggit` - установить
+
+```
+
+```
