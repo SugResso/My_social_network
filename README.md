@@ -803,5 +803,43 @@
 - В [blog](src/blog) создадим папку [templates](src/blog/templates), в ней создадим
   папку [blog](src/blog/templates/blog), в которой создаем файлы [base.html](src/blog/templates/blog/base.html). В base
   запишем следующее:
-  
+
       {% extends 'base.html' %}
+
+---
+
+### Шестнадцатый коммит - Пишем view для user и url к ней
+
+- В [urls.py](src/config/urls.py) добавим url после `path('admin/', admin.site.urls),`:
+
+      path('', include('blog.urls')),
+- В [views.py](src/blog/views.py) пропишем класс:
+
+      class UserPostListView(ListView):
+          model = Post
+    
+          # template_name = ''
+    
+          context_object_name = 'blog_post_user_list'
+      
+          def get_queryset(self):
+              user = get_object_or_404(User, username=self.kwargs.get('username'))
+              return Post.objects.filter(author=user).order_by('-date_created')
+
+- В [blog](src/blog) создадим `url.py` и запишем в него:
+
+      from django.urls import path, re_path
+
+      from views import UserPostListView
+      
+      
+      urlpatterns = [
+          path('posts/user/<str:username>/', UserPostListView.as_view(), name='user-posts-list'),
+      ]
+
+### Проверь себя:
+
+- Войдите в админку, после переходите по данному адресу, в поле после `user/` укажите имя которое используете для входа
+  в админку:
+
+![img.png](img/c16_web_admin_1.png)
