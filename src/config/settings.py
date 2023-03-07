@@ -200,9 +200,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # https://docs.djangoproject.com/en/4.0/ref/settings/#staticfiles-dirs
 STATICFILES_DIRS = [
-
-    # os.path.join(BASE_DIR, "my_site/templates"),
-
+    os.path.join(BASE_DIR, "other_static"),
 ]
 
 # https://docs.djangoproject.com/en/4.0/ref/settings/#staticfiles-finders

@@ -10,6 +10,7 @@ nav:
   - Dev: dev.md
   - settings: settings.md
   - Blog: blog/models.md
+  - dev blog: blog/dev_blog.md
 
 #theme: readthedocs
 theme:

@@ -729,10 +729,10 @@
   Если у вас были посты, то вам нужно в админке зайти в каждый пост и изменить поле `slug` так, чтобы все были разными,
   после возвращаем в поле `slug` настройку `unique=True` и проводим миграции(прошлые две команды)
 
-
-  Если админка выдает ошибку по добавлению/просмотру постов, то в модели `Post` закомментируем вес поля, кроме `title`
-  и `content`, удалим все файлы в [migrations](src/blog/migrations), кроме `__init__.py`, проведем миграции, заходим в
-  админку, удаляем все посты, снова удалим всё в [migrations](src/blog/migrations), кроме `__init__.py`, проведем миграции, всё!
+Если админка выдает ошибку по добавлению/просмотру постов, то в модели `Post` закомментируем вес поля, кроме `title`
+и `content`, удалим все файлы в [migrations](src/blog/migrations), кроме `__init__.py`, проведем миграции, заходим в
+админку, удаляем все посты, снова удалим всё в [migrations](src/blog/migrations), кроме `__init__.py`, проведем
+миграции, всё!
 
 ---
 
@@ -754,7 +754,7 @@
       python manage.py makemigrations
       python manage.py migrate
   Добавим подсчет лайков:
-    
+
       def total_likes(self):
           return self.likes.count()
 
@@ -766,7 +766,7 @@
 
       pip install django-taggit
 - Перейдем в [models.py](src/blog/models.py):
-  
+
       from ckeditor.fields import RichTextField
   В поле `content` заменим тип поля:
 
@@ -775,4 +775,33 @@
 
       python manage.py makemigrations
       python manage.py migrate
+
 Теперь в админке, в поле `content` будет простенький редактор текста.
+
+---
+
+### Пятнадцатый коммит - статика + представление
+
+- В [src](src) создадим папку `other_static`, в ней создадим папку `bootstarp5`, в которой создаем файл `api.js`
+
+- В [settings.py](src/config/settings.py) изменим `STATICFILES_DIRS``:
+
+      # https://docs.djangoproject.com/en/4.0/ref/settings/#staticfiles-dirs
+      STATICFILES_DIRS = [
+          os.path.join(BASE_DIR, "other_static"),
+      ]
+  Соберем статику:
+
+      python manage.py collectstatic
+- В [src](src) создадим папку [templates](src/templates), в ней создадим
+  папку [templates_projects](src/templates/templates_project), в которой создаем
+  файлы [base.html](src/templates/templates_projects/base.html), [navbar.html](src/templates/templates_projects/navbar.html).
+  navbar оставим пока пустым, а в base запишем следующее:
+
+      {% include 'templates_projects/navbar.html' %}
+  Пока просто в виде заготовки, никакого это функционала не несет.
+- В [blog](src/blog) создадим папку [templates](src/blog/templates), в ней создадим
+  папку [blog](src/blog/templates/blog), в которой создаем файлы [base.html](src/blog/templates/blog/base.html). В base
+  запишем следующее:
+  
+      {% extends 'base.html' %}
