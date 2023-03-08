@@ -21,7 +21,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=50)  # , unique=True
     likes = models.ManyToManyField(User, related_name='postcomment', blank=True)
-    reply = models.ForeignKey('self', null=True, related_name='reply_ok', on_delete=models.CASCADE)
+    reply = models.ForeignKey('self', blank=True, null=True, related_name='reply_ok', on_delete=models.CASCADE)
 
     def total_likes(self):
         return self.likes.count()

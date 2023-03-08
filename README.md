@@ -748,7 +748,7 @@
   Добавим новые поля после 'slug':
 
       likes = models.ManyToManyField(User, related_name='postcomment', blank=True)
-      reply = models.ForeignKey('self', null=True, related_name='reply_ok', on_delete=models.CASCADE)
+      reply = models.ForeignKey('self', blank=True, null=True, related_name='reply_ok', on_delete=models.CASCADE)
   После проведём миграции:
 
       python manage.py makemigrations
@@ -804,7 +804,7 @@
   папку [blog](src/blog/templates/blog), в которой создаем файлы [base.html](src/blog/templates/blog/base.html). В base
   запишем следующее:
 
-      {% extends 'base.html' %}
+      {% extends 'templates_projects/base.html' %}
 
 ---
 
@@ -843,3 +843,54 @@
   в админку:
 
 ![img.png](img/c16_web_admin_1.png)
+
+---
+
+### Семнадцатый коммит - выводим наши посты на страницу
+
+- В [blog](src/blog/templates/blog) создадим `user_posts.html`:
+
+- В [views.py](src/blog/views.py) раскомментируем переменную и запишем в неё путь до `user_posts.html`:
+
+      template_name = 'blog/user_posts.html'
+- В [base.html](src/templates/templates_projects/base.html):
+
+      <!doctype html>
+      <html lang="en">
+        <head>
+          <!-- Required meta tags -->
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      
+          <!-- Bootstrap CSS -->
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      
+          <title>{% block title %}{% endblock %}</title>
+        </head>
+        <body>
+          {% block content %}{% endblock %}
+          <!-- Optional JavaScript -->
+          <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+          <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+          <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        </body>
+      </html>
+  Начальное представление взял с сайта [bootstrap](https://getbootstrap.com/docs/4.3/getting-started/introduction/) с
+  добавлением блоков в тэг `tetle` и в первую строку тэга `body`
+- В [user_posts.html](src/blog/templates/blog/user_posts.html):
+
+      {% extends 'blog/base.html' %}
+
+      {% block title %} Post {% endblock %}
+      
+      {% block content %}
+      <h1>Post</h1>
+      {% for post in blog_post_user_list %}
+      
+          <h3>{{ post.title }}</h3>
+      
+      {% endfor %}
+      
+      {% endblock %}
+  
