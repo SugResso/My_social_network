@@ -2,13 +2,31 @@
 
 {% block title %} Post {% endblock %}
 
+
+
+
 {% block content %}
-<h1>Post</h1>
-{% for post in blog_post_user_list %}
 
-    <h3>{{ post.title }}</h3>
+    <h1>Post</h1>
 
+<div align="center"><!-- Посты -->
+    {% for post in blog_post_user_list %}
+    <h2>{{ post.title }}</h2>
+
+    <div align="justify" class="lead col-8"><!-- Пост -->
+
+        {{ post.content|safe }}
+
+        <div align="right"><!-- Дата -->
+            <footer class="blockquote-footer">{{ post.date_created|date:"j F G:i" }} <cite title="Source Title">(update in {{ post.date_updated|date:"j F G:i" }})</cite></footer>
+        </div>
+
+    </div>
+    <br>
+    <br>
 
 {% endfor %}
+
+</div>
 
 {% endblock %}

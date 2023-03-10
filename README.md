@@ -893,4 +893,40 @@
       {% endfor %}
       
       {% endblock %}
+
+---
+
+### Ознакомительный коммит - templates и static
+
+#### По поводу templates и static:
+  В прошлом коммите вы могли видеть html код, в котором показано как извлекать данные для отображения на странице, с этого
+  же коммита html скорее всего не будет, потому что дизаин не продуман и такой код будет занимать тут много места. Вы
+  можете просто скопировать уже готовые html файлы или написать свои. Кому интересен процесс написания шаблонов(html-код),
+  вы можете смотреть изменения в коммитах.(Всё это также относится к css файлам)
+
+#### Как следить за изменениями в templates и static
+
+1) ![img.png](img/intro1_git_1.png)
+2) ![img.png](img/intro1_git_2.png)
+3) ![img.png](img/intro1_git_3.png)
+4) ![img_1.png](img/intro1_git_4.png)
+
+Тут будут помечаться изменения относительно прошлого коммита.
+
+---
+
+### Восемнадцатый коммит - time_zone, views
+
+- В [settings.py](src/config/settings.py) настроим время:
+
+      TIME_ZONE = 'Europe/Moscow'
+  Теперь время будет по Москве
+- В [views.py](src/blog/views.py) удалим `get_queryset` и добавим на его место:
+
+      def get_context_data(self, **kwargs):
+          user = get_object_or_404(User, username=self.kwargs.get('username'))
+          queryset = Post.objects.filter(author=user)
+          context = super().get_context_data(**kwargs)
+          context['blog_post_user_list'] = queryset.order_by('-date_created')
   
+          return context
