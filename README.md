@@ -1,4 +1,4 @@
-<h1 align="center"> About_photographer </h1>
+<h1 align="center"> My_social_network </h1>
 
 <p align="center">
 <--<a href="https://github.com/SugResso/SugResso"> прошлый проект </a>
@@ -930,3 +930,22 @@
           context['blog_post_user_list'] = queryset.order_by('-date_created')
   
           return context
+
+---
+
+### Девятнадцатый коммит - models, admin
+
+- В [admin.py](src/blog/admin.py) добавим в `PageAdmin` последней строкой:
+
+      search_fields = ('title', )
+  Теперь в админке будет поиск по полю 'title', можно добавить и другие поля
+- В [models.py](src/blog/models.py) добавим параметр в следующие поля для нужного нам отображения в адмике:
+
+      title = models.CharField(max_length=200, help_text='до 200 символов', db_index=True, verbose_name='Заголовок')
+      content = RichTextField(max_length=5000, blank=True, null=True, help_text='до 5000 символов', verbose_name='Контен')
+      date_created = models.DateTimeField(default=timezone.now, verbose_name='Дата создания')
+      date_updated = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+      author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
+      slug = models.SlugField(max_length=50, unique=True, verbose_name='URL')
+      likes = models.ManyToManyField(User, related_name='postcomment', blank=True, verbose_name='Лайки')
+      reply = models.ForeignKey('self', blank=True, null=True, related_name='reply_ok', on_delete=models.CASCADE, verbose_name='Репост')

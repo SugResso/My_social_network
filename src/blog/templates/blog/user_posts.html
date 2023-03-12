@@ -15,12 +15,13 @@
 
     <div align="justify" class="lead col-8"><!-- Пост -->
 
-        {{ post.content|safe }}
+        {{ post.content|safe|truncatewords:50 }}
 
         <div align="right"><!-- Дата -->
             <footer class="blockquote-footer">{{ post.date_created|date:"j F G:i" }} <cite title="Source Title">(update in {{ post.date_updated|date:"j F G:i" }})</cite></footer>
         </div>
-
+        <div class="clear"></div>
+        <div class="link-read-post"><a href="{{ p.get_absolute_url }}">ещё</a> </div>
     </div>
     <br>
     <br>
