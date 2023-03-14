@@ -648,8 +648,8 @@
   в class Post
 
       class Meta:
-          verbose_name = 'Создать пост'
-          verbose_name_plural = 'Создать пост'
+          verbose_name = 'Пост'
+          verbose_name_plural = 'Пост'
     
       title = models.CharField(max_length=200, help_text='до 200 символов')
       # content = models.TextField(max_length=5000, blank=True, null=True, help_text='до 5000 символов')
@@ -696,11 +696,11 @@
 
       python manage.py runserver
 
-Заходим в админку, в разделе BLOG > Создать пост, удаляем все посты
+Заходим в админку, в разделе BLOG > Пост, удаляем все посты
 
 ![img.png](img/c11_web_admin_1.png)
 
-Добавить пост можно справа от 'Создать пост' или выше и правее кнопки 'Go'
+Добавить пост можно справа от 'Пост' или выше и правее кнопки 'Go'
 
 ---
 
@@ -719,7 +719,7 @@
 - Вернемся в [admin.py](src/blog/admin.py):
 
       prepopulated_fields = {'slug': ('title',)}
-  Проведём миграции, если у вас есть какие-то посты(можете посмотреть это в админке 'BLOG' > 'Создать посты'), то лучше
+  Проведём миграции, если у вас есть какие-то посты(можете посмотреть это в админке 'BLOG' > 'Посты'), то лучше
   удалить, иначе нужно удалить из модели `Post` в поле `slug` настройку `unique=True`, затем:
 
       python manage.py makemigrations
@@ -794,7 +794,7 @@
 
       python manage.py collectstatic
 - В [src](src) создадим папку [templates](src/templates), в ней создадим
-  папку [templates_projects](src/templates/templates_project), в которой создаем
+  папку [templates_projects](src/templates/templates_projects), в которой создаем
   файлы [base.html](src/templates/templates_projects/base.html), [navbar.html](src/templates/templates_projects/navbar.html).
   navbar оставим пока пустым, а в base запишем следующее:
 
@@ -949,3 +949,46 @@
       slug = models.SlugField(max_length=50, unique=True, verbose_name='URL')
       likes = models.ManyToManyField(User, related_name='postcomment', blank=True, verbose_name='Лайки')
       reply = models.ForeignKey('self', blank=True, null=True, related_name='reply_ok', on_delete=models.CASCADE, verbose_name='Репост')
+- Проведем миграции:
+
+      python manage.py makemigrations
+      python manage.py migrate
+
+---
+
+### Двадцатый коммит - пишем форму для создания поста
+
+- В [urls.py](src/blog/urls.py) добавим url для страницы с формой:
+
+      urlpatterns = [
+          path('posts/user/<str:username>/', UserPostListView.as_view(), name='user-posts-list'),
+          path('register/', addpage, name='add_page'),
+      ]
+- В [blog](src/blog) создадим файл `forms.py`, пропишем в нём класс для создания формы связанной с моделью `Post`:
+
+      class AddPostForm(forms.ModelForm):
+          def __init__(self, *args, **kwargs):
+              super().__init__(*args, **kwargs)
+              self.fields['author'].empty_label = 'Не выбран(а)'
+
+          class Meta:
+              model = Post
+              fields = ('title', 'photo', 'content', 'author', 'slug')
+
+              widgets = {
+                  'title': forms.TextInput(attrs={'class': 'form-input'}),
+                  'content': forms.Textarea(attrs={'cols': 60, 'rows': 10})
+              }
+
+- В [views.py](src/blog/views.py) напишем функцию вне класса, в самом низу:
+
+      def addpost(request):
+          if request.method == 'POST':
+              form = AddPostForm(request.POST)
+              if form.is_valid():
+                  form.save()
+                  return redirect('user-posts-list', request.user.username)
+          else:
+              form = AddPostForm()
+          return render(request, 'blog/form_addpage.html', {'form': form})
+  

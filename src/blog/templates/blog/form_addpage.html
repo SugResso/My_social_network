@@ -1,0 +1,40 @@
+{% extends 'blog/base.html' %}
+
+{% block title %} Добавить пост {% endblock %}
+
+{% block content %}
+
+
+<div align="center">
+    <h1>Добавление поста</h1>
+    <br>
+
+    <div align="justify" class="col-4">
+        <form class="row g-3 needs-validation" action="{% url 'add_page' %}" method="post"
+              enctype="multipart/form-data">
+
+            {% csrf_token %}<!-- Обязателен вначале формы -->
+
+            <div class="col-md-4 position-relative">
+                <div class="form-error">{{ form.non_field_errors }}</div>
+
+                {% for f in form %}
+                    <div class="form-outline">
+
+                        <p><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}: </label>{{ f }}</p>
+                        <div  class="form-error">{{ f.errors }}</div>
+
+                    </div>
+                {% endfor %}
+            </div>
+
+
+            <div class="col-12 pt-2">
+                <button class="btn btn-primary" type="submit">Добавить</button>
+            </div><!-- кнопка -->
+
+        </form>
+    </div><!-- Форма -->
+
+</div><!-- Форма + Заголовок -->
+{% endblock %}
